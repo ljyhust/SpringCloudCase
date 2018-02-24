@@ -32,7 +32,7 @@ public class MongoUserDetailsServiceTest {
 
 		final User user = new User();
 
-		when(repository.findOne(any())).thenReturn(user);
+		when(repository.findOne((String)any())).thenReturn(user);
 		UserDetails loaded = service.loadUserByUsername("name");
 
 		assertEquals(user, loaded);

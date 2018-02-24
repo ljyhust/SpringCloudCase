@@ -1,6 +1,6 @@
 package com.piggymetrics.notification.domain;
 
-import java.util.stream.Stream;
+//import java.util.stream.Stream;
 
 public enum Frequency {
 
@@ -17,9 +17,16 @@ public enum Frequency {
 	}
 
 	public static Frequency withDays(int days) {
-		return Stream.of(Frequency.values())
+	    Frequency[] values = Frequency.values();
+	    for (Frequency elem : values) {
+            if (elem.getDays() == days) {
+                return elem;
+            }
+        }
+	    throw new IllegalArgumentException();
+		/*return Stream.of(Frequency.values())
 				.filter(f -> f.getDays() == days)
 				.findFirst()
-				.orElseThrow(IllegalArgumentException::new);
+				.orElseThrow(IllegalArgumentException::new);*/
 	}
 }

@@ -1,14 +1,17 @@
 package com.piggymetrics.notification.service;
 
+import com.piggymetrics.notification.domain.NotificationSettings;
 import com.piggymetrics.notification.domain.NotificationType;
 import com.piggymetrics.notification.domain.Recipient;
 import com.piggymetrics.notification.repository.RecipientRepository;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -33,12 +36,18 @@ public class RecipientServiceImpl implements RecipientService {
 	public Recipient save(String accountName, Recipient recipient) {
 
 		recipient.setAccountName(accountName);
-		recipient.getScheduledNotifications().values()
+		Collection<NotificationSettings> values = recipient.getScheduledNotifications().values();
+		for (NotificationSettings setting : values) {
+            if (setting.getLastNotified() == null) {
+                setting.setLastNotified(new Date());
+            }
+        }
+		/*recipient.getScheduledNotifications().values()
 				.forEach(settings -> {
 					if (settings.getLastNotified() == null) {
 						settings.setLastNotified(new Date());
 					}
-				});
+				});*/
 
 		repository.save(recipient);
 
