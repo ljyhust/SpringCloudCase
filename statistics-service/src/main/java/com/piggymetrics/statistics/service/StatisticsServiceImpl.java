@@ -7,6 +7,7 @@ import com.piggymetrics.statistics.domain.timeseries.DataPointId;
 import com.piggymetrics.statistics.domain.timeseries.ItemMetric;
 import com.piggymetrics.statistics.domain.timeseries.StatisticMetric;
 import com.piggymetrics.statistics.repository.DataPointRepository;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,11 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
+//import java.util.stream.Collectors;
 
 @Service
 public class StatisticsServiceImpl implements StatisticsService {
@@ -54,14 +56,22 @@ public class StatisticsServiceImpl implements StatisticsService {
 				.atZone(ZoneId.systemDefault()).toInstant();
 
 		DataPointId pointId = new DataPointId(accountName, Date.from(instant));
-
-		Set<ItemMetric> incomes = account.getIncomes().stream()
+		Set<ItemMetric> incomes = new HashSet<>();
+		List<Item> listItem = account.getIncomes();
+		for (Item item : listItem) {
+			incomes.add(this.createItemMetric(item));
+		}
+		/*Set<ItemMetric> incomes = account.getIncomes().stream()
 				.map(this::createItemMetric)
-				.collect(Collectors.toSet());
-
-		Set<ItemMetric> expenses = account.getExpenses().stream()
+				.collect(Collectors.toSet());*/
+		Set<ItemMetric> expenses = new HashSet<>();
+		List<Item> expensList = account.getExpenses();
+		for (Item item : expensList) {
+			expenses.add(this.createItemMetric(item));
+		}
+		/*Set<ItemMetric> expenses = account.getExpenses().stream()
 				.map(this::createItemMetric)
-				.collect(Collectors.toSet());
+				.collect(Collectors.toSet());*/
 
 		Map<StatisticMetric, BigDecimal> statistics = createStatisticMetrics(incomes, expenses, account.getSaving());
 
@@ -80,14 +90,22 @@ public class StatisticsServiceImpl implements StatisticsService {
 	private Map<StatisticMetric, BigDecimal> createStatisticMetrics(Set<ItemMetric> incomes, Set<ItemMetric> expenses, Saving saving) {
 
 		BigDecimal savingAmount = ratesService.convert(saving.getCurrency(), Currency.getBase(), saving.getAmount());
-
-		BigDecimal expensesAmount = expenses.stream()
+		BigDecimal expensesAmount = new BigDecimal(0);
+		for (ItemMetric itemMetric : expenses) {
+			expensesAmount.add(itemMetric.getAmount());
+		}
+		
+		BigDecimal incomesAmount = new BigDecimal(0);
+		for (ItemMetric itemMetric : incomes) {
+			incomesAmount.add(itemMetric.getAmount());
+		}
+		/*BigDecimal expensesAmount = expenses.stream()
 				.map(ItemMetric::getAmount)
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
 
 		BigDecimal incomesAmount = incomes.stream()
 				.map(ItemMetric::getAmount)
-				.reduce(BigDecimal.ZERO, BigDecimal::add);
+				.reduce(BigDecimal.ZERO, BigDecimal::add);*/
 
 		return ImmutableMap.of(
 				StatisticMetric.EXPENSES_AMOUNT, expensesAmount,
