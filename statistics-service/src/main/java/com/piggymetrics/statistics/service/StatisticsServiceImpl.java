@@ -8,6 +8,7 @@ import com.piggymetrics.statistics.domain.timeseries.ItemMetric;
 import com.piggymetrics.statistics.domain.timeseries.StatisticMetric;
 import com.piggymetrics.statistics.repository.DataPointRepository;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +17,9 @@ import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.Instant;
+/*import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.ZoneId;*/
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -52,10 +53,11 @@ public class StatisticsServiceImpl implements StatisticsService {
 	@Override
 	public DataPoint save(String accountName, Account account) {
 
-		Instant instant = LocalDate.now().atStartOfDay()
-				.atZone(ZoneId.systemDefault()).toInstant();
-
-		DataPointId pointId = new DataPointId(accountName, Date.from(instant));
+		Date currDate = new Date();
+		Date zeroHour = DateUtils.setHours(currDate, 0);
+		Date newDate = DateUtils.setMilliseconds(DateUtils.setMinutes(zeroHour, 0), 0);
+		
+		DataPointId pointId = new DataPointId(accountName, newDate);
 		Set<ItemMetric> incomes = new HashSet<>();
 		List<Item> listItem = account.getIncomes();
 		for (Item item : listItem) {

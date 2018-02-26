@@ -1,9 +1,10 @@
 package com.piggymetrics.statistics.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.piggymetrics.statistics.domain.timeseries.LocalDate;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+//import java.time.LocalDate;
 import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true, value = {"date"})
