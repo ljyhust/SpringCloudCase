@@ -1,13 +1,14 @@
 spring:
   application:
-    name: registry
+    name: registry  # Service注册服务器
   cloud:
     config:
-      uri: http://config:8888
+      uri: http://config:8888  # 指向配置服务器的地址
       fail-fast: true
-      password: ${CONFIG_SERVICE_PASSWORD}
+      password: ${CONFIG_SERVICE_PASSWORD:admin}
       username: user
 
+# eureka的其它配置参考config项目下的registry.yml文件
 eureka:
   instance:
     prefer-ip-address: true

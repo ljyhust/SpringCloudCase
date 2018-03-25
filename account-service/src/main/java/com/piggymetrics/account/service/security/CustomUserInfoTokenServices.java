@@ -126,6 +126,7 @@ public class CustomUserInfoTokenServices implements ResourceServerTokenServices 
 				token.setTokenType(this.tokenType);
 				restTemplate.getOAuth2ClientContext().setAccessToken(token);
 			}
+			// http请求token校验服务
 			return restTemplate.getForEntity(path, Map.class).getBody();
 		}
 		catch (Exception ex) {

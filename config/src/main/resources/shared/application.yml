@@ -1,6 +1,7 @@
+# 公共配置，所有的服务都共同拥有的参数
 logging:
   level:
-    org.springframework.security: INFO
+    org.springframework.security: DEBUG
 
 hystrix:
   command:
@@ -17,6 +18,7 @@ eureka:
     serviceUrl:
       defaultZone: http://registry:8761/eureka/
 
+# 配置OAuth2  SSO地址
 security:
   oauth2:
     resource:

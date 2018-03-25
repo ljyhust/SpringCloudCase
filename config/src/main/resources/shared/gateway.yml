@@ -1,3 +1,4 @@
+# Feign集成了hystrix和ribbon，以下参数配置用于Feign
 hystrix:
   command:
     default:
@@ -42,4 +43,4 @@ zuul:
         sensitiveHeaders:
 
 server:
-  port: 4000
+  port: 10008

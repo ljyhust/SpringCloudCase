@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
-@Document(collection = "accounts")
+@Document(collection = "accounts")  // db的mongodb中称为collection即表
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Account {
 

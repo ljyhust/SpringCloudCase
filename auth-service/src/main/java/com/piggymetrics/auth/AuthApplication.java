@@ -28,20 +28,29 @@ import org.springframework.security.oauth2.provider.token.store.InMemoryTokenSto
 @SpringBootApplication
 @EnableResourceServer
 @EnableDiscoveryClient
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)  // 启用Security注解，例如最常用的@PreAuthorize
 public class AuthApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(AuthApplication.class, args);
 	}
 
+	/**
+	 * SpringSecurity的相关配置，主要用于权限配置
+	 * @ClassName: webSecurityConfig 
+	 * @author lijinyang 
+	 * @date 2018年2月28日 下午12:42:15
+	 */
 	@Configuration
-	@EnableWebSecurity
+	@EnableWebSecurity   // 禁用Boot的默认Security配置，配合@Configuration启用自定义配置（需要扩展WebSecurityConfigurerAdapter）
 	protected static class webSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		@Autowired
 		private MongoUserDetailsService userDetailsService;
 
+		/**
+		 * Request层面配置，对应于XML Configuration中的http标签
+		 */
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			// @formatter:off
@@ -52,10 +61,13 @@ public class AuthApplication {
 			// @formatter:on
 		}
 
+		/**
+		 * 身份验证配置，用于注入自定义身份验证Bean和密码校验规则
+		 */
 		@Override
 		protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 			auth.userDetailsService(userDetailsService)
-					.passwordEncoder(new BCryptPasswordEncoder());
+					.passwordEncoder(new BCryptPasswordEncoder());   // userDetailsService 鉴权接口，提供自定义实现的用户权限提供类
 		}
 
 		@Override
@@ -65,10 +77,16 @@ public class AuthApplication {
 		}
 	}
 
+	/**
+	 * OAuth2服务 的相关配置
+	 * @author lijinyang 
+	 * @date 2018年2月28日 下午12:42:54
+	 */
 	@Configuration
 	@EnableAuthorizationServer
 	protected static class OAuth2AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 
+	    // Token放在内存中
 		private TokenStore tokenStore = new InMemoryTokenStore();
 
 		@Autowired

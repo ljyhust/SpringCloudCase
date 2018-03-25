@@ -23,6 +23,12 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
 
+/**
+ * 资源服务器ResourceServerConfigurerAdapter  @EnableResourceServer
+ * @Description: TODO(这里用一句话描述这个类的作用) 
+ * @author lijinyang 
+ * @date 2018年3月7日 下午2:07:44
+ */
 @SpringBootApplication
 @EnableResourceServer
 @EnableDiscoveryClient
@@ -33,6 +39,7 @@ import org.springframework.security.oauth2.provider.token.ResourceServerTokenSer
 @Configuration
 public class AccountApplication extends ResourceServerConfigurerAdapter {
 
+    // 配置OAuth2服务器地址
 	@Autowired
 	private ResourceServerProperties sso;
 
@@ -40,6 +47,7 @@ public class AccountApplication extends ResourceServerConfigurerAdapter {
 		SpringApplication.run(AccountApplication.class, args);
 	}
 
+	// OAuth2客户端，security.oauth2.client为配置信息项
 	@Bean
 	@ConfigurationProperties(prefix = "security.oauth2.client")
 	public ClientCredentialsResourceDetails clientCredentialsResourceDetails() {
@@ -56,11 +64,13 @@ public class AccountApplication extends ResourceServerConfigurerAdapter {
 		return new OAuth2RestTemplate(clientCredentialsResourceDetails());
 	}
 
+	// 资源服务器用到的tokenService，用于向 OAuth2服务器获取认证结果
 	@Bean
 	public ResourceServerTokenServices tokenServices() {
 		return new CustomUserInfoTokenServices(sso.getUserInfoUri(), sso.getClientId());
 	}
 
+	// 配置authenticated()访问资源，需要经过OAuth认证
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()

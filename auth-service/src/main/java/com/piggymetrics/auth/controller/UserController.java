@@ -18,7 +18,8 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
-
+	
+	// 提供用户信息
 	@RequestMapping(value = "/current", method = RequestMethod.GET)
 	public Principal getUser(Principal principal) {
 		return principal;

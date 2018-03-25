@@ -2,7 +2,7 @@ security:
   oauth2:
     client:
       clientId: statistics-service
-      clientSecret: ${STATISTICS_SERVICE_PASSWORD}
+      clientSecret: ${STATISTICS_SERVICE_PASSWORD:admin}
       accessTokenUri: http://auth-service:5000/uaa/oauth/token
       grant-type: client_credentials
       scope: server
